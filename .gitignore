@@ -7,3 +7,4 @@ data/*.bak.db
 data/ground_truth.json
 reports/*
 !reports/.gitkeep
+.env.example
