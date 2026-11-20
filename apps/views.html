@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClinForge Views</title>
+<style>
+.viz-root{
+  color-scheme:light;
+  --surface-1:#fcfcfb; --page:#f9f9f7;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300;
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])) .viz-root{
+    color-scheme:dark;
+    --surface-1:#1a1a19; --page:#0d0d0d;
+    --text-primary:#f0efec; --text-secondary:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300;
+  }
+}
+:root[data-theme="dark"] .viz-root{
+  color-scheme:dark;
+  --surface-1:#1a1a19; --page:#0d0d0d;
+  --text-primary:#f0efec; --text-secondary:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300;
+}
+body.viz-root{font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);
+  color:var(--text-primary);max-width:960px;margin:0 auto;padding:1.25rem 1.25rem 3.25rem}
+.banner{background:#fff4e5;border:1px solid #f0c36d;color:#1b2733;padding:.4rem .7rem;border-radius:6px;font-size:.85rem}
+.footer{position:fixed;left:0;right:0;bottom:0;border-radius:0;border-width:1px 0 0;text-align:center;z-index:8}
+.bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.9rem 0}
+select,input,button{font:inherit;padding:.35rem .5rem;background:var(--surface-1);color:var(--text-primary);
+  border:1px solid var(--border);border-radius:6px}
+button{cursor:pointer}
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0}
+.card h2{margin:.1rem 0 .2rem;font-size:1.05rem}
+.sub{color:var(--text-secondary);font-size:.85rem;margin:0 0 .6rem}
+svg text{font:11px system-ui,sans-serif;fill:var(--muted)}
+svg .lbl{fill:var(--text-secondary);font-variant-numeric:tabular-nums}
+svg .row-lbl{fill:var(--text-secondary);font-size:12px}
+.tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--border);
+  border-radius:6px;padding:.35rem .55rem;font-size:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.18);
+  display:none;z-index:9;color:var(--text-primary);max-width:300px}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{text-align:left;padding:.25rem .5rem;border-bottom:1px solid var(--grid)}
+td.num{font-variant-numeric:tabular-nums}
+.hidden{display:none}
+.toggle{font-size:.8rem;color:var(--text-secondary);background:none;border:none;text-decoration:underline}
+</style></head>
+<body class="viz-root">
+<h1 style="font-size:1.3rem">ClinForge clinical views</h1>
+<div class="bar">
+  Signed in as <select id="tok">
+    <option value="tok_adams_valid">Dr. Adams</option>
+    <option value="tok_baker_valid">Dr. Baker</option>
+    <option value="tok_clark_valid">Nurse Clark</option>
+  </select>
+  Patient <select id="pt"></select>
+  <button id="theme" class="toggle" type="button">dark/light</button>
+</div>
+
+<div class="card">
+  <h2 id="lt-title">Lab trend</h2>
+  <p class="sub" id="lt-sub">Pick a lab and press Plot.</p>
+  <div class="bar">
+    <input id="lt-q" value="Hemoglobin A1c" size="28" aria-label="lab name">
+    <button id="lt-go" type="button">Plot</button>
+    <button id="lt-tbl" class="toggle" type="button">table view</button>
+  </div>
+  <div id="lt-chart" role="img" aria-label="lab trend line chart"></div>
+  <div id="lt-table" class="hidden"></div>
+</div>
+
+<div class="card">
+  <h2>Encounter timeline</h2>
+  <p class="sub" id="tl-sub">Each labeled row is one encounter class; a dot is one encounter.</p>
+  <div class="bar"><button id="tl-tbl" class="toggle" type="button">table view</button></div>
+  <div id="tl-chart" role="img" aria-label="encounter timeline"></div>
+  <div id="tl-table" class="hidden"></div>
+</div>
+
+<div class="tip" id="tip"></div>
+<footer class="banner footer">Synthetic data only. Not for clinical care or medical decision-making.</footer>
+<script src="/views.js"></script>
+</body></html>

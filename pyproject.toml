@@ -1,0 +1,19 @@
+[project]
+name = "clinforge-health-ai"
+version = "0.1.0"
+description = "Locally deployable agentic clinical/healthcare simulation over synthetic patient data."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["mock-ehr-api/tests", "shared/tests", "mcp-server/tests", "agent/tests", "eval/harness"]
+pythonpath = ["mock-ehr-api", "shared", "mcp-server", "agent", "eval"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 120
+exclude = [".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E501"]

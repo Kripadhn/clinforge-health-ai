@@ -1,0 +1,30 @@
+services:
+  ehr-api:
+    build: { context: ., dockerfile: mock-ehr-api/Dockerfile }
+    ports: ["8001:8001"]
+    volumes: ["./data:/data:ro"]
+    environment:
+      EHR_SERVICE_KEY: ${EHR_SERVICE_KEY:-dev-service-key}
+  mcp:
+    build: { context: ., dockerfile: mcp-server/Dockerfile }
+    ports: ["8002:8002"]
+    environment:
+      EHR_API_URL: http://ehr-api:8001
+      EHR_SERVICE_KEY: ${EHR_SERVICE_KEY:-dev-service-key}
+    depends_on: [ehr-api]
+  agent:
+    build: { context: ., dockerfile: agent/Dockerfile }
+    ports: ["8003:8003"]
+    environment:
+      MCP_URL: http://mcp:8002/mcp
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on: [mcp]
+  host:
+    build: { context: ., dockerfile: host/Dockerfile }
+    ports: ["5173:5173"]
+    environment:
+      AGENT_URL: http://agent:8003
+    depends_on: [agent]

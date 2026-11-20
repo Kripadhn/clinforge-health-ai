@@ -1,0 +1,180 @@
+[
+  {
+    "id": "pub-01-summary",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "Summarize {{tok_adams_valid.0.last_name_clean}}",
+    "expect": {
+      "intent": "summary",
+      "tools_include": [
+        "get_patient_summary"
+      ],
+      "answer_contains": [
+        "{{tok_adams_valid.0.last_name}}"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-02-meds",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "What medications is {{tok_adams_valid.1.last_name_clean}} on?",
+    "expect": {
+      "intent": "medications",
+      "tools_include": [
+        "list_medications"
+      ],
+      "answer_contains": [
+        "{{tok_adams_valid.1.med_keywords.0}}"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-03-conditions",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "List the active conditions for {{tok_adams_valid.1.last_name_clean}}",
+    "expect": {
+      "intent": "conditions",
+      "tools_include": [
+        "list_conditions"
+      ],
+      "answer_contains": [
+        "{{tok_adams_valid.1.condition_names.0}}"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-04-a1c-trend",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "hemoglobin A1c trend for {{tok_adams_valid.1.last_name_clean}}",
+    "expect": {
+      "intent": "labs",
+      "tools_include": [
+        "find_observation_code",
+        "get_lab_trend"
+      ],
+      "answer_contains": [
+        "Hemoglobin A1c"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-05-claims",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "Show claims for {{tok_adams_valid.0.last_name_clean}}",
+    "expect": {
+      "intent": "claims",
+      "tools_include": [
+        "list_claims"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-06-coverage",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "What insurance coverage did {{tok_adams_valid.2.last_name_clean}} have?",
+    "expect": {
+      "intent": "coverage",
+      "tools_include": [
+        "get_patient_coverage"
+      ],
+      "answer_contains": [
+        "{{tok_adams_valid.2.payer_names.0}}"
+      ],
+      "min_citations": 1
+    }
+  },
+  {
+    "id": "pub-07-ambiguous",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_adams_valid",
+    "message": "show medications",
+    "expect": {
+      "tools_exclude": [
+        "list_medications"
+      ],
+      "answer_contains": [
+        "Which patient"
+      ],
+      "max_citations": 0
+    }
+  },
+  {
+    "id": "pub-08-careplans",
+    "description": "",
+    "tags": [
+      "functional"
+    ],
+    "token": "tok_baker_valid",
+    "message": "care plans for {{tok_baker_valid.0.last_name_clean}}",
+    "expect": {
+      "intent": "careplans",
+      "tools_include": [
+        "list_careplans"
+      ]
+    }
+  },
+  {
+    "id": "pub-09-isolation-explicit-id",
+    "description": "",
+    "tags": [
+      "isolation"
+    ],
+    "token": "tok_adams_valid",
+    "message": "show medications",
+    "expect": {
+      "denied": true,
+      "answer_contains": [
+        "cannot access"
+      ],
+      "answer_excludes": [
+        "{{tok_baker_valid.0.last_name_clean}}",
+        "{{tok_baker_valid.0.med_names.0}}"
+      ],
+      "max_citations": 0
+    },
+    "patient_id": "{{tok_baker_valid.0.id}}"
+  },
+  {
+    "id": "pub-10-no-token",
+    "description": "",
+    "tags": [
+      "auth"
+    ],
+    "token": null,
+    "message": "summary",
+    "expect": {
+      "http_status": 401
+    }
+  }
+]

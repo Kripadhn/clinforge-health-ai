@@ -1,0 +1,25 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install fastapi uvicorn httpx pydantic "mcp<2" pytest pytest-asyncio ruff
+      - run: ruff check .
+      - run: bash scripts/check_spec_first.sh
+      - run: python scripts/compute_truth.py
+      - run: EHR_SERVICE_KEY=test-key python -m pytest -q
+      - run: bash scripts/ci_eval.sh
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: eval-reports, path: reports/ }
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
